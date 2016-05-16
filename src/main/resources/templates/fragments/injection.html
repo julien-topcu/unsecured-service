@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        <div th:fragment="injection" class="owasp-section">
+            <h2 id="OWASP_A1-Injection"><a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP A1-Injection</a></h2>
+            <p class="todo">TODO: Explanation</p>
+            <h3>SQL Injection</h3>
+            <p>Go to the <a href="/" target="_blank">login page</a> and try to log with a random username and with the following password: <kbd>' OR '1'='1</kbd>.</p>
+            <p>TODO: remediation</p>
+            <h3>XML Injection</h3>
+            <p>Unsecured Service provides an XML endpoint <code>/transfer</code> where the user gives the name and the content of his transfer inside the XML Request. Push submit to post it to the unsecured service.</p>
+            <div th:replace="fragments/transferRequestResponse :: transfer(request=basicRequest, response=basicResponse, template=${basicTransferTemplate})"></div>
+            <h4>XML external entity attack (XXE)</h4>
+            <p>As you can see, the response sends back the name of transfer set by the user with a status. This field will be used to perform an XML external entity attack. XML Entities are "shortcuts" on structures and data, mostly used to decrease the length of a XML payload by replacing some parts of it by using aliases to XML entities.
+                Those entities can be external, meaning that they have to be resolved from an external source, one of them can be the file system. In the following request we declare an external entity <code>file</code> which is a file local and relative to the unsecured service container: <code>file:src/main/resources/data.sql</code>.
+                This entity is placed inside the <code>transferName</code> field, in order to be resolved by the server and sent back in the response (see previous request). Hit the submit button to see how it will be resolved.
+            </p>
+            <div th:replace="fragments/transferRequestResponse :: transfer(request=externalEntityRequest, response=externalEntityResponse, template=${externalEntityTransferTemplate})"></div>
+            <p>The <code>transferName</code> <code>&file;</code> is resolved by the server by the content of <code>file:src/main/resources/data.sql</code>. Since this field is sent back in the response the attacker can get the content of a remote file by specifying the path in the external entity.
+                It also works with absolute path, give a try with <code>file:///C:/Windows/System32/drivers/etc/hosts</code> if you execute unsecured service on Windows.
+            </p>
+            <p>Last but not least, change the external entity path to <code>file:.</code> to get a remote file browser.</p>
+
+            <div class="alert alert-warning" role="alert">Note: If you set a path to an XML file, the server may fail to resolve it because it will try to inject XML headers like <code>&lt;? xml ... ?&gt;</code> in the middle of the response payload.</div>
+            <h4>XML entity expansion attack</h4>
+            <p>XML entities can also be internal to the XML document, but being internal is not safer than the external entities. XML entities can be recursively defined, which provides really efficient shortcuts for long repeated patterns. In the following example, an entity <code>x</code> is defined with a very long string (reduced for the purpose of the exercise)
+                This entity is defined four times in the entity <code>x1</code> which is defined four times in the entity <code>x2</code> etc...
+            </p>
+            <p>Please push the submit button.</p>
+            <div th:replace="fragments/transferRequestResponse :: transfer(request=expansionEntityRequest, response=expansionEntityResponse, template=${expansionEntityTransferTemplate})"></div>
+            <p>The server has resolved <code>x3</code> by repeating <b>64 times</b> the long string. Since there is no theorical limit to the number of recusive entities resolved, an attacker can generate a very large amount of them with a very very long string which can be very expensive for the server to be resolved and causes a denial of service (DOS).</p>
+            <p>This is called the entity expansion. It can be mixed with external entities to get a more efficient attack in term of DOS.</p>
+            <p class="todo">TODO: Remediation</p>
+            <script src="js/transfer.js" type="text/javascript" charset="utf-8"></script>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,7 @@
+<!DOCTYPE TransferRequest [
+<!ENTITY file SYSTEM "file:src/main/resources/data.sql">
+]>
+<TransferRequest xmlns="">
+    <transferName>&file;</transferName>
+    <content>content_of_transfer</content>
+</TransferRequest>

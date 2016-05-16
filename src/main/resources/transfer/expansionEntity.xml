@@ -1,0 +1,9 @@
+<!DOCTYPE TransferRequest [
+<!ENTITY x "long_attack_string_">
+<!ENTITY x1 "&x;&x;&x;&x;">
+<!ENTITY x2 "&x1;&x1;&x1;&x1;">
+<!ENTITY x3 "&x2;&x2;&x2;&x2;">]>
+<TransferRequest xmlns="">
+    <transferName>&x3;</transferName>
+    <content>content_of_transfer</content>
+</TransferRequest>

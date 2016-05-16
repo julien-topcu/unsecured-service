@@ -1,0 +1,4 @@
+<TransferRequest>
+    <transferName>my_transfer_name</transferName>
+    <content>content_of_transfer</content>
+</TransferRequest>

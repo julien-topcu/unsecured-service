@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <div th:fragment="transfer(request, response, template)">
+            <h4>Request</h4>
+            <button type="submit" class="btn btn-primary" th:onclick="${request} + '.transfer()'">Submit</button>
+            <pre th:id="${request}" class="xmleditor" th:text="${template}">
+            </pre>
+            <h4>Response</h4>
+            <pre th:id="${response}" class="xmleditor">
+            </pre>
+        </div>
+    </body>
+</html>

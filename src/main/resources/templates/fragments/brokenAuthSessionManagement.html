@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        <div th:fragment="brokenAuthSessionManagement" class="owasp-section">
+            <h2 id="OWASP_A2-Broken_Authentication_and_Session_Management"><a href="https://www.owasp.org/index.php/Top_10_2013-A2-Broken_Authentication_and_Session_Management">OWASP A2-Broken Authentication and Session Management</a></h2>
+            <ul><li>User authentication credentials aren’t protected when stored using hashing or encryption. See A6.</li>
+                <li>Credentials can be guessed or overwritten through weak account management functions (e.g., account creation, change password, recover password, weak session IDs).</li>
+                <li>Session IDs are exposed in the URL (e.g., URL rewriting).</li>
+                <li>Session IDs are vulnerable to session fixation attacks.</li>
+                <li>Session IDs don’t timeout, or user sessions or authentication tokens, particularly single sign-on (SSO) tokens, aren’t properly invalidated during logout.</li>
+                <li>Session IDs aren’t rotated after successful login.</li>
+                <li>Passwords, session IDs, and other credentials are sent over unencrypted connections. See A6.</li></ul>
+            <h3>Session Management</h3>
+            <p>Unsecured Service is using a Session-based authentication. Basically, when you perform your first action on the server, the container will create you a session with an unique id, the sessionid.
+                In a Session-based authentication, when you get logged in, the server will flag your session as authenticated. In that way, if you perform another operation in the same session, you won't have to provide your credentials and the server will just checked that your sessionid already succeeded the authentication phase.
+            </p>
+            <p>If cookies are enabled on your browser, the sessionid will be persisted in a cookie and sent as a header of your HTTP requests to the server. But if cookies are not supported (on client or server side), the sessionid will be appended in the URL. For the purpose of the exercises, the cookie support has been disabled in Unsecured Service.</p>
+            <p class="todo">TODO: Secured cookie, httponly</p>
+        </div>
+    </body>
+</html>
