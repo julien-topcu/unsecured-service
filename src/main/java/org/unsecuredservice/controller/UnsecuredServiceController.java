@@ -33,6 +33,9 @@ public class UnsecuredServiceController {
     @Value("classpath:transfer/expansionEntity.xml")
     private Resource expansionEntityTransferTemplate;
 
+    @Value("classpath:org/unsecuredservice/security/RawSQLAuthenticationProvider.java")
+    private Resource rawSQLAuthenticationProvider;
+
     @RequestMapping(method = POST, path = "/transfer", consumes = APPLICATION_XML_VALUE, produces = APPLICATION_XML_VALUE)
     @ResponseBody
     public TransferResponse transfer(@RequestBody final TransferRequest transferRequest) {
@@ -45,6 +48,7 @@ public class UnsecuredServiceController {
         modelAndView.addObject("basicTransferTemplate", getContent(basicTransferTemplate));
         modelAndView.addObject("externalEntityTransferTemplate", getContent(externalEntityTransferTemplate));
         modelAndView.addObject("expansionEntityTransferTemplate", getContent(expansionEntityTransferTemplate));
+        modelAndView.addObject("rawSQLAuthenticationProvider", getContent(rawSQLAuthenticationProvider));
         return modelAndView;
     }
 

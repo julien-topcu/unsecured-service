@@ -23,12 +23,15 @@ public class RawSQLAuthenticationProvider implements AuthenticationProvider {
         try {
             final String name = authentication.getName();
             final String password = authentication.getCredentials().toString();
-            User user = jdbcTemplate.queryForObject("Select * from USERS where username='" + name + "' and password='" + password + "'", BeanPropertyRowMapper.newInstance(User.class
-                                            ));
+            User user = jdbcTemplate
+                    .queryForObject(
+                            "Select * from USERS where username='" + name + "' and password='" + password + "'",
+                            BeanPropertyRowMapper.newInstance(User.class)
+                    );
             return new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), null);
 
         } catch (EmptyResultDataAccessException e) {
-            throw new BadCredentialsException("Who are you????");
+            throw new BadCredentialsException("Who are you????", e);
         }
     }
 

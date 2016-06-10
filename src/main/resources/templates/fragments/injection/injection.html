@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        <div th:fragment="injection" class="owasp-section">
+            <h2 id="OWASP_A1-Injection"><a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">OWASP A1-Injection</a></h2>
+            <p>Injection is a vulnerability that allows an attacker to inject malicious commands/codes which will be executed by a software or a system. Several types of injection exist: SQL, XML, LDAP, OS commands, etc...</p>
+            <div th:replace="fragments/injection/sql :: sql"/>
+            <div th:replace="fragments/injection/xml :: xml"/>
+        </div>
+    </body>
+</html>

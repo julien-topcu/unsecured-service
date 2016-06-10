@@ -9,13 +9,11 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous"/>
 
         <!-- Latest compiled and minified JavaScript -->
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-        <style>
-            #login{
-                width: 40%;
-                margin-top: 3em;
-            }
-        </style>
+        <script src="https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/owasp-esapi-js/esapi.js"/>
+        <script src="js/login.js"/>
+        <link rel="stylesheet" type="text/css" href="css/unsecured-service.css"/>
     </head>
     <body>
         <div class="container">
@@ -28,10 +26,10 @@
                     <div th:if="${param.logout}" class="bg-info">
                         You have been logged out.
                     </div>
-                    <form th:action="@{/login}" method="post">
+                    <form th:id="loginForm" th:action="@{/login}" method="post">
                         <div class="form-group"><label for="username">User Name:</label><input class="form-control" type="text" id="username" name="username"/> </div>
                         <div class="form-group"><label for="password"> Password:</label><input class="form-control" type="password" id="password" name="password" placeholder="Password"/></div>
-                        <button type="submit" class="btn btn-default">Submit</button>
+                        <button type="submit" onclick="login(event)" class="btn btn-default">Submit</button>
                     </form>
                 </div>
             </div>

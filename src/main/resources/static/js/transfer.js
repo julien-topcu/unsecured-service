@@ -8,7 +8,7 @@ function getXmlEditor(name) {
     return editor;
 }
 
-function getTransferRequest(name, basicResponse) {
+function getTransferRequest(name, responsePanel) {
     var request = getXmlEditor(name);
     request.transfer = function () {
         $.ajax({
@@ -21,7 +21,7 @@ function getTransferRequest(name, basicResponse) {
             data: request.getValue(),
             dataType: "xml",
             success: function (response) {
-                basicResponse.setValue(vkbeautify.xml(new XMLSerializer().serializeToString(response)));
+                responsePanel.setValue(vkbeautify.xml(new XMLSerializer().serializeToString(response)));
             }
         });
     }

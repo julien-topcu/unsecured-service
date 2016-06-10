@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        <div th:fragment="sql">
+            <h3>SQL Injection</h3>
+            <p>Unsecured Service requires its users to be authenticated. The actual authentication provider is a basic SQL database which holds a table where the users credentials are stored.
+                Currently the database contains only one user <code>admin:admin</code>, if you try to log with, you will access the private space of the admin user.
+                Like expected, unknown <code>user:password</code> will be rejected by the system, but let's try the following thing.</p>
+            <p>Go to the <a href="/" target="_blank">login page</a> and try to log with a random username and with the following password: <kbd>' OR '1'='1</kbd>.</p>
+            <p>For some reason, you have been logged as the user admin, the SQL injection worked. Let's take a look to the class responsible of the authentication to understand what happened.</p>
+            <pre th:id="rawSQLAuthenticationProvider" class="javaviewer" th:text="${rawSQLAuthenticationProvider}">
+            </pre>
+            <p>Authentication mechanism is simply given by the following SQL request <code>Select * from USERS where username='<kbd>&lt;name&gt;</kbd>' and password='<kbd>&lt;password&gt;</kbd>'</code>
+                where <kbd>&lt;name&gt;</kbd> and <kbd>&lt;password&gt;</kbd> are inputs given by the user through the login form. This request simply checks if a user with those credentials exist in the table <code>USERS</code>.
+                If so the user will be loggued otherwise he will be rejected. Going back to our injection, we submited a login form with the following inputs <kbd>&lt;random&gt;</kbd> and <kbd>' OR '1'='1</kbd>.
+                As a result, Unsecured Service executed the following request: <code>Select * from USERS where username='<kbd>&lt;random&gt;</kbd>' and password='' OR '1'='1'</code>.
+                Since OR '1'='1' is always true and the <code>and</code> operator has the priority, the database will repond as the request would have been <code>Select * from USERS</code> so the authenticator thought that the random user was the only user in the database.
+            </p>
+            <div class="alert alert-warning" role="alert">
+                SQL Injection doesn't only concern login forms neither the presentation layer. Every inputs coming from outside of your software that will be used to request the database are potential risks.
+                Attackers can also inject more destructive SQL commands, like <code>INSERT INTO</code> or <code>DROP</code>.
+            </div>
+            <p>The remediation of this vulnerability is to make sure that none inputs of the software will be interpreted as SQL commands. We will see how to perform that from a UI perspective as well as a service.</p>
+            <h4>Usage of parametrized API</h4>
+            <p>The best practice is to use parametrized API where the inputs will actually not be interpreted as commands.</p>
+            <h4>Input Validation/Output Encoding</h4>
+            <p>Sometimes your software hasn't a direct connection to the datasource but requests another service (REST, SOAP, or whatever) to retrieve the data it needs from the user inputs.
+                This another software can be vulnerable to Injection, making yours by transitivity also vulnerable to Injection.
+                In that case the inputs must be escaped/encoded in order to make sure they wont be interpreted as commands or directives.
+            </p>
+            <p>The example is not exhaustive regarding SQL Injection, more information can be found here: <a href="http://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a>,  <a href="http://cwe.mitre.org/data/definitions/564.html">CWE-564: SQL Injection: Hibernate</a>.</p>
+            <script src="js/javaviewer.js" type="text/javascript" charset="utf-8"></script>
+        </div>
+    </body>
+</html>
