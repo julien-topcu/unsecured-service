@@ -11,8 +11,7 @@
                 Like expected, unknown <code>user:password</code> will be rejected by the system, but let's try the following thing.</p>
             <p>Go to the <a href="/" target="_blank">login page</a> and try to log with a random username and with the following password: <kbd>' OR '1'='1</kbd>.</p>
             <p>For some reason, you have been logged as the user admin, the SQL injection worked. Let's take a look to the class responsible of the authentication to understand what happened.</p>
-            <pre th:id="rawSQLAuthenticationProvider" class="javaviewer" th:text="${rawSQLAuthenticationProvider}">
-            </pre>
+            <pre th:id="rawSQLAuthenticationProvider" class="javaviewer" th:text="${rawSQLAuthenticationProvider}"/>
             <p>Authentication mechanism is simply given by the following SQL request <code>Select * from USERS where username='<kbd>&lt;name&gt;</kbd>' and password='<kbd>&lt;password&gt;</kbd>'</code>
                 where <kbd>&lt;name&gt;</kbd> and <kbd>&lt;password&gt;</kbd> are inputs given by the user through the login form. This request simply checks if a user with those credentials exist in the table <code>USERS</code>.
                 If so the user will be loggued otherwise he will be rejected. Going back to our injection, we submited a login form with the following inputs <kbd>&lt;random&gt;</kbd> and <kbd>' OR '1'='1</kbd>.
@@ -25,12 +24,24 @@
             </div>
             <p>The remediation of this vulnerability is to make sure that none inputs of the software will be interpreted as SQL commands. We will see how to perform that from a UI perspective as well as a service.</p>
             <h4>Usage of parametrized API</h4>
-            <p>The best practice is to use parametrized API where the inputs will actually not be interpreted as commands.</p>
-            <h4>Input Validation/Output Encoding</h4>
-            <p>Sometimes your software hasn't a direct connection to the datasource but requests another service (REST, SOAP, or whatever) to retrieve the data it needs from the user inputs.
-                This another software can be vulnerable to Injection, making yours by transitivity also vulnerable to Injection.
-                In that case the inputs must be escaped/encoded in order to make sure they wont be interpreted as commands or directives.
+            <p>The best practice is to use parametrized API where the inputs will actually not be interpreted as commands.
+                JDBC provides the <a href="https://docs.oracle.com/javase/8/docs/api/java/sql/PreparedStatement.html">PreparedStatement</a> interface
+                which are precompiled SQL requests where the parameters are defined using setters, it ensures that the parameters of the SQL request won't be interpreted as an SQL statement.
             </p>
+            <p>The following AuthenticationProvider offers a safer implementation of the authentication through SQL database:</p>
+            <pre th:id="preparedStatementAuthenticationProvider" class="javaviewer" th:text="${preparedStatementAuthenticationProvider}"/>
+
+            <p>To test the code above, stop Unsecured Service, update <code>application.properties</code> by setting <code>spring.profiles.active: safer</code> and restart the service.
+                If you retry the SQL injection again, you should not succeed this time.
+            </p>
+
+            <div class="alert alert-info" role="alert">
+                From a pure Spring Security standpoint, you should not create your AuthenticationProvider like that. Instead, use
+                <a href="http://docs.spring.io/autorepo/docs/spring-security/current/apidocs/org/springframework/security/config/annotation/authentication/builders/AuthenticationManagerBuilder.html#jdbcAuthentication--">AuthenticationManagerBuilder.jdbcAuthentication()</a>.
+                This builder is based on PreparedStatement, so it will protect you against SQL Injection for the authentication part only.
+                Additionally <code>WebSecurityConfig</code> shows how to set globally an AuthenticationManager in the Spring context.
+            </div>
+
             <p>The example is not exhaustive regarding SQL Injection, more information can be found here: <a href="http://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')</a>,  <a href="http://cwe.mitre.org/data/definitions/564.html">CWE-564: SQL Injection: Hibernate</a>.</p>
             <script src="js/javaviewer.js" type="text/javascript" charset="utf-8"></script>
         </div>

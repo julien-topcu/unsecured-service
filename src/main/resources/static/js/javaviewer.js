@@ -9,3 +9,4 @@ function getJavaViewer(name) {
 }
 
 var rawSQLAuthenticationProvider = getJavaViewer("rawSQLAuthenticationProvider");
+var preparedStatementAuthenticationProvider = getJavaViewer("preparedStatementAuthenticationProvider");

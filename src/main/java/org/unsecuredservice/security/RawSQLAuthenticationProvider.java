@@ -1,7 +1,7 @@
 package org.unsecuredservice.security;
 
-import org.unsecuredservice.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,8 +11,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
+import org.unsecuredservice.model.User;
 
 @Component
+@Profile("unsecured")
 public class RawSQLAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired

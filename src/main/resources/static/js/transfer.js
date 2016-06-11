@@ -3,7 +3,7 @@ function getXmlEditor(name) {
     var editor = ace.edit(name);
     editor.setTheme("ace/theme/monokai");
     editor.getSession().setMode("ace/mode/xml");
-    editor.setOptions({maxLines: Infinity});
+    editor.setOptions({minLines: 4, maxLines: Infinity});
     editor.setPrintMarginColumn(1000);
     return editor;
 }
