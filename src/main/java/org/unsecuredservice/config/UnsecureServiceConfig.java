@@ -1,6 +1,8 @@
 package org.unsecuredservice.config;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
+
+import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.util.List;
 import javax.xml.stream.XMLInputFactory;
@@ -23,7 +25,7 @@ public class UnsecureServiceConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public XmlMapper xmlMapper() {
-        XmlMapper xmlMapper = new XmlMapper(XMLInputFactory.newFactory());
+        XmlMapper xmlMapper = new XmlMapper(new XmlFactory());
         xmlMapper.configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
         return xmlMapper;
     }
